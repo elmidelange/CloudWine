@@ -4,24 +4,33 @@ import numpy as np
 import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+"""Main function
+
+Trains TF-IDF model and saves as pickle
+"""
 def main(args):
-    print(args)
+    # Read training data
     df = pd.read_csv(args['data_dir'])
     corpus = df['description'].tolist()
 
+    # Train TF-IDF model
     tf = TfidfVectorizer(analyzer='word', ngram_range=(1,2), stop_words = "english", lowercase = True, max_features = 500000)
     tf_transformer = tf.fit(corpus)
 
+    # Save TfidfVectoriser vocab
     with open('/Users/elmi/Projects/CloudWine/src/models/tfidf_transform.pkl', "wb") as pickleFile:
         pickle.dump(tf_transformer, pickleFile)
 
+    # Save corpus text vectors
     X = tf.fit_transform(corpus)
     with open('/Users/elmi/Projects/CloudWine/src/models/tfidf_matrix.pkl', "wb") as pickleFile:
         pickle.dump(X, pickleFile)
 
-    print('Saved Pickle')
-    
 
+"""Returns argument parser
+
+Declares expected arguments to function
+"""
 def init_argparse() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         usage="%(prog)s [OPTION] [FILE]...",

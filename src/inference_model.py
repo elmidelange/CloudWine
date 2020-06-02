@@ -5,8 +5,12 @@ import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 
+"""Main function
+
+Loads TF-IDF model and inferences input string
+"""
 def main(args):
-    print(args)
+    # Load trained model pickles
     tf = pickle.load(open("/Users/elmi/Projects/CloudWine/src/models/tfidf_transform.pkl", 'rb'))
     x = pickle.load(open("/Users/elmi/Projects/CloudWine/src/models/tfidf_matrix.pkl", 'rb'))
 
@@ -14,12 +18,16 @@ def main(args):
     tf_new = TfidfVectorizer(analyzer='word', ngram_range=(1,2), stop_words = "english", lowercase = True,
                           max_features = 500000, vocabulary = tf.vocabulary_)
 
+    # Convert text to vector representation
     x_new = tf_new.fit_transform([args['text']])
 
+    # Calculate cosine similarities to trained text
     cosine_similarities = linear_kernel(x_new, x).flatten()
 
+    # Get the index to the top 3 similar texts
     related_docs_indices = cosine_similarities.argsort()[:-4:-1]
 
+    # Find the wine titles for given index
     df = pd.read_csv(args['data_dir'])
 
     print('\n')
@@ -33,7 +41,10 @@ def main(args):
         print('\n')
 
 
+"""Returns argument parser
 
+Declares expected arguments to function
+"""
 def init_argparse() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         usage="%(prog)s [OPTION] [FILE]...",
