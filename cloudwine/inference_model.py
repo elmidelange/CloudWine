@@ -8,14 +8,14 @@ from sklearn.metrics.pairwise import linear_kernel
 # Main function
 def main(args):
     # Run inference and return dataframe with ordered recommendations
-    df = inference(args['data_dir'], args['text'])
+    df = inference(args['data_dir'], "./models/", args['text'])
 
 
 # Loads TF-IDF model and inferences input string
-def inference(data_dir, text):
+def inference(data_dir, model_dir, text):
     # Load trained model pickles
-    tf = pickle.load(open("models/tfidf_transform.pkl", 'rb'))
-    x = pickle.load(open("models/tfidf_matrix.pkl", 'rb'))
+    tf = pickle.load(open(model_dir + "tfidf_transform.pkl", 'rb'))
+    x = pickle.load(open(model_dir + "tfidf_matrix.pkl", 'rb'))
 
     # Create new tfidfVectorizer with trained vocabulary
     tf_new = TfidfVectorizer(analyzer='word', ngram_range=(1,2), stop_words = "english", lowercase = True,
@@ -56,7 +56,7 @@ def init_argparse() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "-d", "--data_dir", help="File path to the training data",
-            default='data/raw/sample.csv'
+            default='../data/raw/sample.csv'
     )
     parser.add_argument(
         "-t", "--text", help="Text to inference"
