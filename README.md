@@ -1,7 +1,6 @@
 # Cloud Wine
 A scalable wine recommendation engine.
 
-i
 ## Motivation for this project:
 
 ## Setup
