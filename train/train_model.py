@@ -58,6 +58,10 @@ def init_argparse() -> argparse.ArgumentParser:
         "-m", "--model_dir", help="Model directory to save into",
             default='./model', type=check_dir_exists
     )
+    # parser.add_argument(
+    #     "-v", "--validation", help="Run validation",
+    #         store=True
+    # )
     return parser
 
 
