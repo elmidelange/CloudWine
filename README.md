@@ -4,7 +4,7 @@ A scalable wine recommendation engine.
 ## Motivation for this project:
 
 ## Setup
-Clone repository and update python path
+Clone repository
 ```
 git clone https://github.com/elmidelange/CloudWine
 cd ./CloudWine
@@ -25,7 +25,7 @@ To install the package above, please run:
 pip install -r requirements
 ```
 
-## Build Environment
+<!-- ## Build Environment
 - Include instructions of how to launch scripts in the build subfolder
 - Build scripts can include shell scripts or python setup.py files
 - The purpose of these scripts is to build a standalone environment, for running the code in this repository
@@ -36,51 +36,44 @@ pip install -r requirements
 
 # Step 1
 # Step 2
-```
+``` -->
 
-## Configs
+<!-- ## Configs
 - We recommond using either .yaml or .txt for your config files, not .json
 - **DO NOT STORE CREDENTIALS IN THE CONFIG DIRECTORY!!**
-- If credentials are needed, use environment variables or HashiCorp's [Vault](https://www.vaultproject.io/)
+- If credentials are needed, use environment variables or HashiCorp's [Vault](https://www.vaultproject.io/) -->
 
 
-## Test
+<!-- ## Test
 - Include instructions for how to run all tests after the software is installed
 ```
 # Example
 
 # Step 1
 # Step 2
-```
+``` -->
 
-## Run Inference
-- Include instructions on how to run inference
-- i.e. image classification on a single image for a CNN deep learning project
+<!-- ## Run Inference
 ```
 # Example
 
 # Step 1
 # Step 2
-```
+``` -->
 
 ## Build Model
-- Include instructions of how to build the model
-- This can be done either locally or on the cloud
+- Local build
 ```
-# Example
-
-# Step 1
-# Step 2
+python3 train/train_model.py -d './data/raw' -m './models'
+```
+- Docker build
+```
+docker build -t cloudwine-streamlit:v1 -f Dockerfile .
 ```
 
-## Serve Model
-- Include instructions of how to set up a REST or RPC endpoint
-- This is for running remote inference via a custom model
+## Run Streamlit App
 ```
-# Example
-
-# Step 1
-# Step 2
+streamlit run app.py
 ```
 
 ## Analysis
