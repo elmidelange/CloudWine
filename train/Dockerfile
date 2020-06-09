@@ -11,6 +11,8 @@ COPY models.py /root/models.py
 COPY config.yaml /root/config.yaml
 COPY requirements.txt /root/requirements.txt
 
+RUN mkdir /root/models
+
 RUN conda install python=3.8.3
 RUN apt-get update && apt-get install -y vim g++
 RUN pip install -r requirements.txt
