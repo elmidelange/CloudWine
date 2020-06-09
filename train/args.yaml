@@ -1,3 +1,0 @@
-model: tfidf
-args: 
- validation: True

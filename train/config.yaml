@@ -1,0 +1,8 @@
+model: tfidf
+args:
+ data_path: './data/raw/sample_10000.csv'
+ model_dir: './models'
+ validation: True
+ save: True
+ vec_size: 100
+ max_epochs: 10
