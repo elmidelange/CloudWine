@@ -40,15 +40,14 @@ class Dataset:
         return self.df
 
     # Saves the dataframe as a pickle
-    def save(self, dir):
-        columns = ['title', 'description', 'points', 'price', 'variety', 'region_1']
-        self.df[columns].to_pickle(dir + '/tfidf_metadata.pkl')
+    def save(self, path):
+        path = path.replace('raw', 'processed')
+        columns = ['title', 'description', 'points', 'price', 'variety', 'region_1', 'variety_region']
+        print('Saving to ' + path)
+        self.df[columns].to_csv(path, index=False)
 
     # Read in dataframe
     def __read_data__(self):
-        # path = self.dir + '/sample.csv'
-        # path = self.dir + '/sample_10000.csv'
-        # path = self.dir + '/winemag-data-130k-v2.csv'
         path = self.filepath
         logger.info("Loading data from %s", path)
         if not (os.path.isfile(path)):

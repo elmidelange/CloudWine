@@ -1,33 +1,29 @@
 # Imports
 import os
+import sys
 import argparse
 import yaml
 
 from utils import Dataset, Validation, logger
-from models import TfidfTrainer, DocVecTrainer
+from models import TfidfTrainer, DocVecTrainer, BertTrainer
 
 
 # Main function
 def main(config):
-
     # Initialise the model type and arguments
     model, args = init_trainer(config)
-
-    print(args)
-
+    logger.info(args)
     # Read training data
     dataset = Dataset(args['data_path'])
     corpus = dataset.get_corpus()
-
-    # Train TF-IDF model
-    # model = TfidfTrainer()
+    # Train model
     model.train(corpus)
-
+    # Save model
     if args['save'] == True:
         # Save run
         model.save(args['model_dir'])
-        dataset.save(args['model_dir'])
-
+        dataset.save(args['data_path'])
+    # Perform validation
     if args['validation'] == True:
         # Validate
         valid = Validation()
@@ -51,6 +47,7 @@ def check_file_exists(path):
         return path
     else:
         raise ValueError(path)
+
 
 # Checks for valid arguments
 def check_config(path):
@@ -87,11 +84,9 @@ def init_trainer(config):
     if model_type == 'tfidf':
         model = TfidfTrainer()
     elif model_type == 'doc2vec':
-        model = DocVecTrainer(args)
-        pass
+        model = DocVecTrainer()
     elif model_type == 'bert':
-        # TODO: Add transformers model check_dir_exists
-        pass
+        model = BertTrainer()
     else:
         raise ValueError(model_type)
 
@@ -102,11 +97,11 @@ def init_trainer(config):
 def init_argparse() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         usage="%(prog)s [CONFIG_YAML]",
-        description="Train a TD-IDF model"
+        description="Train a text embedding model"
     )
     parser.add_argument(
         "-y", "--config_yaml", help="Training config yaml file",
-            default='./args.yaml', type=check_config
+            type=check_config
     )
     return parser
 
