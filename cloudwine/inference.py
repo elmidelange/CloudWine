@@ -10,11 +10,13 @@ import streamlit as st
 
 
 # Loads TF-IDF model and inferences input string
-def inference_tfidf(data_dir, model_dir, text):
+def inference_tfidf(df, text):
     print('TF-IDF Inference')
     # Load trained model pickles
-    tf = pickle.load(open(model_dir + "tfidf_model.pkl", 'rb'))
-    x = pickle.load(open(model_dir + "tfidf_vectors.pkl", 'rb'))
+    tf = pickle.load(open("cloudwine/models/tfidf_model.pkl", 'rb'))
+    x = pickle.load(open("cloudwine/models/tfidf_vectors.pkl", 'rb'))
+    # Get filtered embeddings
+    x = x[df.index.tolist()]
 
     # Create new tfidfVectorizer with trained vocabulary
     tf_new = TfidfVectorizer(analyzer='word', ngram_range=(1,2), stop_words = "english", lowercase = True,
@@ -29,29 +31,19 @@ def inference_tfidf(data_dir, model_dir, text):
     # Get the index to the top 3 similar texts
     related_docs_indices = cosine_similarities.argsort()[:-6:-1]
 
-    # Find the wine titles for given index
-    df = pd.read_csv(data_dir)
-
-    print('\n')
-    print('Original Text: ')
-    print('text')
-    print('\n')
-
-    for i in range(len(related_docs_indices)):
-        print('Recommendation ', i+1)
-        print(df.iloc[related_docs_indices[i]]['description'])
-        print('\n')
-
-    df_subset = df.loc[related_docs_indices].reset_index(drop=True)
-    return df_subset[['title', 'description', 'variety']]
+    df_subset = df.reset_index().loc[related_docs_indices].reset_index(drop=True)
+    df_subset['similarity'] = cosine_similarities[related_docs_indices]
+    return df_subset
 
 
 # Loads TF-IDF model and inferences input string
-def inference_docvec(data_dir, model_dir, text):
+def inference_docvec(df, text):
     print('Doc2Vec Inference')
     # Load trained model pickles
-    model = pickle.load(open(model_dir + "doc2vec_model.pkl", 'rb'))
-    x = pickle.load(open(model_dir + "doc2vec_vectors.pkl", 'rb'))
+    model = pickle.load(open("cloudwine/models/doc2vec_model.pkl", 'rb'))
+    x = pickle.load(open("cloudwine/models/doc2vec_vectors.pkl", 'rb'))
+    # Get filtered embeddings
+    x = x[df.index.tolist()]
 
     words=word_tokenize(text.lower())
     x_new = model.infer_vector(words)
@@ -62,30 +54,19 @@ def inference_docvec(data_dir, model_dir, text):
     # Get the index to the top 3 similar texts
     related_docs_indices = cosine_similarities.argsort()[:-6:-1]
 
-    # Find the wine titles for given index
-    df = pd.read_csv(data_dir)
-
-    print('\n')
-    print('Original Text: ')
-    print('text')
-    print('\n')
-
-    for i in range(len(related_docs_indices)):
-        print('Recommendation ', i+1)
-        print(df.iloc[related_docs_indices[i]]['description'])
-        print('\n')
-
-    df_subset = df.loc[related_docs_indices].reset_index(drop=True)
+    df_subset = df.reset_index().loc[related_docs_indices].reset_index(drop=True)
     df_subset['similarity'] = cosine_similarities[related_docs_indices]
-    return df_subset[['title', 'description', 'variety', 'similarity']]
+    return df_subset
 
 
 # Loads BERT embeddings and inferences input string
-def inference_bert(data_dir, model_dir, text):
+def inference_bert(df, text):
     print('BERT Inference')
     # Load trained model pickles
-    model = pickle.load(open(model_dir + "bert_model.pkl", 'rb'))
-    x = pickle.load(open(model_dir + "bert_vectors.pkl", 'rb'))
+    model = pickle.load(open("cloudwine/models/bert_model.pkl", 'rb'))
+    x = pickle.load(open("cloudwine/models/bert_vectors.pkl", 'rb'))
+    # Get filtered embeddings
+    x = x[df.index.tolist()]
     # Inference new text
     x_new = model.encode([text])
 
@@ -96,19 +77,6 @@ def inference_bert(data_dir, model_dir, text):
     # Get the index to the top 3 similar texts
     related_docs_indices = cosine_similarities.argsort()[:-6:-1]
 
-    # Find the wine titles for given index
-    df = pd.read_csv(data_dir)
-
-    print('\n')
-    print('Original Text: ')
-    print('text')
-    print('\n')
-
-    for i in range(len(related_docs_indices)):
-        print('Recommendation ', i+1)
-        print(df.iloc[related_docs_indices[i]]['description'])
-        print('\n')
-
-    df_subset = df.loc[related_docs_indices].reset_index(drop=True)
+    df_subset = df.reset_index().loc[related_docs_indices].reset_index(drop=True)
     df_subset['similarity'] = cosine_similarities[related_docs_indices]
-    return df_subset[['title', 'description', 'variety', 'similarity']]
+    return df_subset

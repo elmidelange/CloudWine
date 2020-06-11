@@ -1,5 +1,5 @@
 args:
-  data_path: ./data/raw/sample.csv
+  data_path: ./data/raw/sample_10000.csv
   lemmatize: true
   lowercase: true
   model_dir: ./models/
