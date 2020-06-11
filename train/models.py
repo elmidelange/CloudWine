@@ -19,7 +19,7 @@ class TfidfTrainer:
     # Train TF-IDF model
     def train(self, corpus):
         logger.info("Training TF-IDF model")
-        tf = TfidfVectorizer(analyzer='word', ngram_range=(1,2), stop_words = "english", lowercase = True, max_features = 768)
+        tf = TfidfVectorizer(analyzer='word', ngram_range=(1,2), max_features = 768)
         self.tf_transformer = tf.fit(corpus)
         self.text_vectors = tf.fit_transform(corpus).toarray()
 
@@ -50,7 +50,7 @@ class DocVecTrainer:
     # Train Doc2Vec model
     def train(self, corpus):
         logger.info("Training Doc2Vec model")
-        tagged_data = [TaggedDocument(words=word_tokenize(_d.lower()), tags=[str(i)]) for i, _d in enumerate(corpus)]
+        tagged_data = [TaggedDocument(words=x.strip(), tags=[str(i)]) for i, x in enumerate(corpus)]
         alpha = 0.025
         # Create model
         model = Doc2Vec(size=self.vec_size,
@@ -62,6 +62,7 @@ class DocVecTrainer:
         # Train model
         for epoch in range(self.max_epochs):
             logger.info('iteration {0}'.format(epoch))
+            print('{}/{}'.format(epoch, self.max_epochs))
             model.train(tagged_data,
                         total_examples=model.corpus_count,
                         epochs=model.iter)
@@ -100,6 +101,7 @@ class BertTrainer:
     # Embed corpus with BERT embeddings
     def train(self, corpus):
         logger.info("Training BERT model")
+        print('Encoding bert embeddings')
         sentence_embeddings = self.model.encode(corpus)
         self.text_vectors = np.array(sentence_embeddings)
 

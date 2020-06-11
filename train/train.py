@@ -7,6 +7,10 @@ import yaml
 from utils import Dataset, Validation, logger
 from models import TfidfTrainer, DocVecTrainer, BertTrainer
 
+from datetime import datetime
+
+import pickle
+
 
 # Main function
 def main(config):
@@ -14,23 +18,28 @@ def main(config):
     model, args = init_trainer(config)
     logger.info(args)
     # Read training data
-    dataset = Dataset(args['data_path'])
+    dataset = Dataset(args['data_path'], args)
     corpus = dataset.get_corpus()
     # Train model
     model.train(corpus)
     # Save model
-    if args['save'] == True:
+    if args['save_model'] == True:
         # Save run
+        logger.info('Saving Model')
         model.save(args['model_dir'])
         dataset.save(args['data_path'])
     # Perform validation
-    if args['validation'] == True:
-        # Validate
-        valid = Validation()
-        x = model.get_vectors()
-        df = dataset.get_df()
-        valid.plot_pca(x, df['variety_region'])
-        print(valid.cluster_similarities(x, df))
+    valid = Validation()
+    x = model.get_vectors()
+    df = dataset.get_df()
+    # valid.plot_pca(x, df['variety_region'])
+    results = valid.cluster_similarities(x, df)
+    logger.info('\n', results)
+    if args['save_validation'] == True:
+        logger.info('Saving Validation')
+        config['output'] = results['similarity']
+        with open(args['validation_dir'] +  '{}.pkl'.format(datetime.now()), "wb") as pickleFile:
+            pickle.dump(config, pickleFile)
 
 
 # Checks for valid directory
@@ -62,18 +71,20 @@ def check_config(path):
         logger.info(e)
         logger.error('Invalid parameters yaml ' + path)
         raise ValueError(path)
-        exit()
-    # Check for parameters
+    # Check for model and args keys
     if not all(key in config for key in ('model', 'args')):
         logger.error("Missing 'model' or 'args' parameter in config yaml " + path)
         raise ValueError(path)
-        exit()
     model = config['model']
     args = config['args']
-    if not all(key in args for key in ('data_path', 'model_dir', 'validation', 'save')):
-        logger.error("Missing 'data_path' or 'model_dir' args in config yaml " + path)
-        raise Exception("Config yaml missing one of 'data_path', 'model_dir', 'validation', 'save'")
-        sys.exit(1)
+    # Check for general args
+    if not all(key in args for key in ('data_path', 'save_model', 'model_dir', 'save_validation', 'validation_dir')):
+        logger.error("Config yaml missing model argument(s) " + path)
+        raise Exception("Config yaml missing model arguments")
+    # Check for NLP processing args
+    if not all(key in args for key in ('lowercase', 'remove_punctuation', 'remove_stopwords', 'lemmatize')):
+        logger.error("Missing NLP processing parameters " + path)
+        raise Exception("Config yaml missing NLP processing parameter(s)")
     return config
 
 
