@@ -64,14 +64,14 @@ pip install -r requirements
 ## Build Model
 - Local build
 ```
-python3 train/train_model.py -d './data/raw' -m './models'
+python3 train/train.py -f './train/config.yaml'
 ```
 - Docker build
 ```
-docker build -t cloudwine-streamlit:v1 -f Dockerfile .
+docker build -t cloudwine-streamlit:v1 -f Dockerfile.app .
 ```
 
-## Run Streamlit App
+## Run Streamlit App Locally
 ```
 streamlit run app.py
 ```
