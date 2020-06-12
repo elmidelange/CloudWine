@@ -8,6 +8,12 @@ import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.metrics.pairwise import cosine_similarity
 
+import nltk
+from nltk.corpus import stopwords
+
+nltk.download('stopwords')
+nltk.download('wordnet')
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -22,10 +28,14 @@ logger.setLevel(logging.INFO)
 
 # A dataset class that handles preprocessing, augementaion and saving
 class Dataset:
-    def __init__(self, filepath):
+    def __init__(self, filepath, args):
         self.filepath = filepath
         self.df_raw = self.__read_data__()
-        self.df = self.__process_data__()
+        self.df_processed = self.__process_data__()
+        self.df = self.__transform_data__(lowercase=args['lowercase'],
+            punctuation=args['remove_punctuation'], stop_words=args['remove_stopwords'],
+            lemmatize=args['lemmatize']
+        )
 
     # Returns the dataset corpus
     def get_corpus(self):
@@ -40,15 +50,14 @@ class Dataset:
         return self.df
 
     # Saves the dataframe as a pickle
-    def save(self, dir):
-        columns = ['title', 'description', 'points', 'price', 'variety', 'region_1']
-        self.df[columns].to_pickle(dir + '/tfidf_metadata.pkl')
+    def save(self, path):
+        path = path.replace('raw', 'processed')
+        columns = ['title', 'description', 'points', 'price', 'variety', 'region_1', 'variety_region']
+        print('Saving to ' + path)
+        self.df[columns].to_csv(path, index=False)
 
     # Read in dataframe
     def __read_data__(self):
-        # path = self.dir + '/sample.csv'
-        # path = self.dir + '/sample_10000.csv'
-        # path = self.dir + '/winemag-data-130k-v2.csv'
         path = self.filepath
         logger.info("Loading data from %s", path)
         if not (os.path.isfile(path)):
@@ -64,6 +73,40 @@ class Dataset:
         df['variety_region'] = df[['variety', 'region_1']].agg('-'.join, axis=1)
         return df
 
+    # Transform dataframe
+    def __transform_data__(self, lowercase=True, punctuation=True, stop_words=True, lemmatize=True):
+        corpus = self.df_processed['description']
+        if lowercase:
+            # Convert text to lowercase
+            logger.info('Converting to lowercase')
+            corpus = corpus.str.lower()
+        if punctuation:
+            # Remove punctuation
+            logger.info('Removing punctuation')
+            corpus = corpus.str.replace('[^\w\s]','')
+        if stop_words:
+            # Remove stopwords
+            logger.info('Removing stopwords')
+            def remove_stops(text):
+                stops = stopwords.words('english')
+                word_list = text.split()
+                meaningful_words = [w for w in word_list if not w in stops]
+                return ' '.join(meaningful_words)
+            corpus = corpus.apply(remove_stops)
+        if lemmatize:
+            # Lemmatize words
+            logger.info('Lemmatizing')
+            def lemmatize_text(text):
+                # w_tokenizer = nltk.tokenize.WhitespaceTokenizer()
+                lemmatizer = nltk.stem.WordNetLemmatizer()
+                word_list = text.split()
+                lemmatized_words = [lemmatizer.lemmatize(w) for w in word_list]
+                return ' '.join(lemmatized_words)
+            corpus = corpus.apply(lemmatize_text)
+        df = self.df_processed.copy()
+        df['description'] = corpus
+        return df
+
 
 # A model validation class that evaluate model performance
 class Validation:
@@ -73,7 +116,7 @@ class Validation:
             'Champagne Blend-Champagne','Pinot Noir-Sonoma Coast','Malbec-Mendoza',
             'Chardonnay-Russian River Valley','Sangiovese-Brunello di Montalcino',
             'Nebbiolo-Barbaresco']
-        self.top_n = 6
+        self.top_n = 10
 
     # Returns the average cosine simialrity for top n clusters
     def cluster_similarities(self, x, df):
@@ -81,13 +124,17 @@ class Validation:
         df = df[df['variety_region'].isin(self.top_labels[:self.top_n])]
         labels = df['variety_region'].unique()
         vals = []
+        similarity_sum = 0
+        count = 0
         for l in labels:
             idx = df[df['variety_region'] == l].index.to_numpy()
             x_cluster = x[idx]
             cluster_mean = np.mean(x_cluster, axis=0)
             out = np.mean(cosine_similarity([cluster_mean], x_cluster).flatten())
+            similarity_sum += out
+            count += 1
             vals += [{l: out}]
-        return vals
+        return {'similarity':similarity_sum/count, 'detail': vals}
 
     # Plots the document embeddings in 2D using PCA
     def plot_pca(self, x,y, top=True):

@@ -1,0 +1,11 @@
+args:
+  data_path: ./data/raw/sample.csv
+  lemmatize: false
+  lowercase: false
+  model_dir: ./models/
+  remove_punctuation: false
+  remove_stopwords: false
+  save_model: false
+  save_validation: true
+  validation_dir: ./runs/
+model: ''
