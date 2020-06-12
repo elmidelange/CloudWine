@@ -1,0 +1,11 @@
+model: bert
+args:
+  data_path: ./data/raw/sample_10000.csv
+  lemmatize: true
+  lowercase: true
+  model_dir: ./models/
+  remove_punctuation: true
+  remove_stopwords: true
+  save_model: false
+  save_validation: true
+  validation_dir: ./runs/

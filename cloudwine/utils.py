@@ -2,16 +2,11 @@ import pandas as pd
 import numpy as np
 import pickle
 import streamlit as st
-# import plotly.figure_factory as ff
 import plotly.graph_objects as go
 
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 from sklearn.metrics.pairwise import cosine_similarity
-
-import pandas as pd
-
-from dataclasses import dataclass
 
 
 # Show grouped bar graph for model evaluation metrics
@@ -98,10 +93,6 @@ def show_pca(model, data_file, model_dir):
     elif model == 'BERT':
         tsne_result = df_tsne[['bert_1', 'bert_2']].values
         x = pickle.load(open(model_dir + "bert_vectors.pkl", 'rb'))
-
-    print(tsne_result.shape)
-
-    print(df.shape)
 
     # Graph
     df_graph = df[['title', 'variety_region']]

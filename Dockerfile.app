@@ -7,7 +7,7 @@ FROM continuumio/miniconda3
 COPY app.py /tmp/
 COPY requirements.txt /tmp/
 COPY cloudwine /tmp/cloudwine
-COPY data /tmp/data
+#COPY data /tmp/data
 # .streamlit for something to do with making enableCORS=False
 COPY .streamlit /tmp/.streamlit
 

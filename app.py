@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 
 from cloudwine.inference import inference_tfidf, inference_docvec, inference_bert
 from cloudwine.utils import show_metrics_graph
