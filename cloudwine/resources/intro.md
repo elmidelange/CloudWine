@@ -1,2 +1,2 @@
 # Cloud Wine
-### A scalable wine recommendation engine
+### Finding your perfect wine should be a breeze.
