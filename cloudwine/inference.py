@@ -6,15 +6,14 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from nltk.tokenize import word_tokenize
 
-import streamlit as st
-
 
 # Loads TF-IDF model and inferences input string
-def inference_tfidf(df, text):
+def inference_tfidf(data_module, text):
     print('TF-IDF Inference')
     # Load trained model pickles
-    tf = pickle.load(open("cloudwine/models/tfidf_model.pkl", 'rb'))
-    x = pickle.load(open("cloudwine/models/tfidf_vectors.pkl", 'rb'))
+    tf = data_module.model
+    x = data_module.vectors
+    df = data_module.data_filtered
     # Get filtered embeddings
     x = x[df.index.tolist()]
 
@@ -37,11 +36,12 @@ def inference_tfidf(df, text):
 
 
 # Loads TF-IDF model and inferences input string
-def inference_docvec(df, text):
+def inference_docvec(data_module, text):
     print('Doc2Vec Inference')
     # Load trained model pickles
-    model = pickle.load(open("cloudwine/models/doc2vec_model.pkl", 'rb'))
-    x = pickle.load(open("cloudwine/models/doc2vec_vectors.pkl", 'rb'))
+    model = data_module.model
+    x = data_module.vectors
+    df = data_module.data_filtered
     # Get filtered embeddings
     x = x[df.index.tolist()]
 
@@ -60,11 +60,12 @@ def inference_docvec(df, text):
 
 
 # Loads BERT embeddings and inferences input string
-def inference_bert(df, text):
+def inference_bert(data_module, text):
     print('BERT Inference')
     # Load trained model pickles
-    model = pickle.load(open("cloudwine/models/bert_model.pkl", 'rb'))
-    x = pickle.load(open("cloudwine/models/bert_vectors.pkl", 'rb'))
+    model = data_module.model
+    x = data_module.vectors
+    df = data_module.data_filtered
     # Get filtered embeddings
     x = x[df.index.tolist()]
     # Inference new text

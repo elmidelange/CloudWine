@@ -26,6 +26,8 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
+
+
 # A dataset class that handles preprocessing, augementaion and saving
 class Dataset:
     def __init__(self, filepath, args):
