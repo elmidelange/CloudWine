@@ -20,7 +20,6 @@ class Embeddings:
     docvec_vectors = pickle.load(open("cloudwine/models/doc2vec_vectors.pkl", 'rb'))
     tfidf_model = pickle.load(open("cloudwine/models/tfidf_model.pkl", 'rb'))
     tfidf_vectors = pickle.load(open("cloudwine/models/tfidf_vectors.pkl", 'rb'))
-embeddings = Embeddings()
 
 
 @dataclass
@@ -62,6 +61,8 @@ def download_data():
 
 # Initialise data class
 def init_data():
+    global embeddings
+    embeddings = Embeddings()
     model = pickle.load(open(model_dir + "bert_model.pkl", 'rb'))
     vectors = pickle.load(open(model_dir + "bert_vectors.pkl", 'rb'))
     df = pd.read_csv(data_file)
