@@ -1,4 +1,4 @@
-# Cloud Wine
+# 🌤 Cloud Wine 🍷
 A scalable wine recommendation application.
 
 ## Motivation for this project:
