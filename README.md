@@ -129,6 +129,12 @@ Expose app to internet
 kubectl expose deployment cloudwine-app --name=cloudwine-app-service --type=LoadBalancer --port 80 --target-port 8080
 kubectl get service
 ```
+---
+**NOTE**
+
+Streamlit uses a default port of 8501 and is changed to 80 in the .streamlit/config.toml. To use Streamlit's default port change the --target-port parameter to 8501.
+
+---
 
 Deleting the deployment
 ```
