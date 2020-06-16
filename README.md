@@ -61,20 +61,81 @@ pip install -r requirements
 # Step 2
 ``` -->
 
-## Build Model
+## Train Model
 - Local build
 ```
 python3 train/train.py -f './train/config.yaml'
 ```
 - Docker build
 ```
-docker build -t cloudwine-streamlit:v1 -f Dockerfile.app .
+cd train
+docker build -t cloudwine-train:v1 -f Dockerfile.train .
 ```
 
-## Run Streamlit App Locally
+## Run Streamlit App
+- Local build
 ```
 streamlit run app.py
 ```
+- Docker build
+```
+docker build -t cloudwine-streamlit:v1 -f Dockerfile.app .
+```
+
+## Deploy to Google Kubernetes Engine (GKE)
+Based off the intruction from Google's 'Deploying a containerized web application' (https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app).
+
+Prerequisites:
+1) A Google Cloud (GC) Project with billing enabled.
+2) The GC SDK installed (https://cloud.google.com/sdk/docs/quickstarts)
+3) Install kubernetes
+```
+gcloud components install kubectl
+```
+
+Set up gcloud tool (GC SDK)
+```
+export PROJECT_ID = gcp-project-name
+export ZONE = gcp-compute-zone (e.g. us-westb-1)
+
+gcloud config set project $PROJECT_ID
+gcloud config set compute/zone compute-zone
+
+gcloud auth configure-docker
+```
+
+Build and push the container image to GC Container Registery:
+```
+docker build -t gcp.io/$(PROJECT_ID}/cloudwine-streamlit:v1 -f Dockerfile.app .
+docker push gcr.io/${PROJECT_ID}/cloudwine-streamlit:v1
+```
+
+Create GKE Cluster
+```
+gcloud container clusters create cloudwine-cluster
+gcloud compute instances list
+```
+
+Deploy app to GKE
+```
+kubectl create deployment cloudwine-app --image=gcr.io/${PROJECT_ID}/cloudwine-app:v1
+kubectl autoscale deployment cloudwine-app --cpu-percent=80 --min=1 --max=5
+kubectl get pods
+```
+
+Expose app to internet
+```
+kubectl expose deployment cloudwine-app --name=cloudwine-app-service --type=LoadBalancer --port 80 --target-port 8080
+kubectl get service
+```
+
+Deleting the deployment
+```
+kubectl delete service cloudwine-app-service
+gcloud container clusters delete cloudwine-cluster
+```
+
+
 
 ## Analysis
 - Include some form of EDA (exploratory data analysis)
