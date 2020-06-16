@@ -36,7 +36,7 @@ def run_app():
     # dataframe['name'].value_counts()[:n].index.tolist()
     varieties = st.sidebar.multiselect( 'Wine Variety',
             variety_options)
-    price_range = st.sidebar.slider("Price Range", 0, int(df.price.max()), (0, int(df.price.max())), 5)
+    price_range = st.sidebar.slider("Price Range ($)", 0, int(df.price.max()), (0, int(df.price.max())), 5)
     # Apply filters
     df_subset = apply_filters(df, varieties, price_range)
     data_module.data_filtered = df_subset
@@ -51,10 +51,10 @@ def run_app():
             df_recommend = inference_docvec(data_module, user_input)
         elif embed_model == "TF-IDF":
             df_recommend = inference_tfidf(data_module, user_input)
-        st.table(df_recommend[['title', 'description', 'variety', 'similarity']].style)
+        st.table(df_recommend[['title', 'description', 'variety', 'price', 'similarity']])
     else:
         if varieties or (price_range != (0,df.price.max())):
-            st.table(df_subset[['title', 'description', 'variety']])
+            st.table(df_subset[['title', 'description', 'variety', 'price']])
 
 
 # Analysis app

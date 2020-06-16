@@ -68,6 +68,8 @@ def init_data():
     model = pickle.load(open(model_dir + "bert_model.pkl", 'rb'))
     vectors = pickle.load(open(model_dir + "bert_vectors.pkl", 'rb'))
     df = pd.read_csv(data_file)
+    # df['price'] = df['price'].round(1)
+    # st.table(df)
     return DataModule(df, df, model, vectors)
 
 
