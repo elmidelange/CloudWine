@@ -22,6 +22,7 @@ class TfidfTrainer:
         tf = TfidfVectorizer(analyzer='word', ngram_range=(1,2), max_features = 768)
         self.tf_transformer = tf.fit(corpus)
         self.text_vectors = tf.fit_transform(corpus).toarray()
+        # print(tf.get_feature_names())
 
     # Returns the trained sentence vectors
     def get_vectors(self):

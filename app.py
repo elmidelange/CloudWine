@@ -1,7 +1,7 @@
 import streamlit as st
 
 from cloudwine.inference import inference_tfidf, inference_docvec, inference_bert
-from cloudwine.utils import show_metrics_graph, download_data, update_embedding, init_data
+from cloudwine.utils import show_metrics_graph, download_data, update_embedding, init_data, logger
 
 # Start execution
 def main():
@@ -44,14 +44,7 @@ def run_app():
     # Input description from user
     user_input = st.text_area("Describe your favourite wine here")
     if user_input:
-        # Display recommendations as table
-        if embed_model == 'BERT':
-            df_recommend = inference_bert(data_module, user_input)
-        elif embed_model == "Doc2Vec":
-            df_recommend = inference_docvec(data_module, user_input)
-        elif embed_model == "TF-IDF":
-            df_recommend = inference_tfidf(data_module, user_input)
-        st.table(df_recommend[['title', 'description', 'variety', 'price', 'similarity']])
+        st.table(perform_inference(data_module, user_input, embed_model))
     else:
         if varieties or (price_range != (0,df.price.max())):
             st.table(df_subset[['title', 'description', 'variety', 'price']])
@@ -71,6 +64,19 @@ def apply_filters(df, varieties, price_range):
     # Price range selection
     df_subset = df_subset[(df_subset['price']>price_range[0]) & (df_subset['price']<price_range[1])]
     return df_subset
+
+
+# @st.cache
+def perform_inference(data_module, user_input, embed_model):
+    # Display recommendations as table
+    if embed_model == 'BERT':
+        df_recommend = inference_bert(data_module, user_input)
+    elif embed_model == "Doc2Vec":
+        df_recommend = inference_docvec(data_module, user_input)
+    elif embed_model == "TF-IDF":
+        df_recommend = inference_tfidf(data_module, user_input)
+    return df_recommend[['title', 'description', 'variety', 'price', 'similarity']]
+
 
 
 if __name__ == "__main__":

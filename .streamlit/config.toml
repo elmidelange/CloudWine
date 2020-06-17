@@ -8,4 +8,4 @@ port=80
 # serverAddress = 34.83.109.34
 
 [global]
-logLevel="debug"
+logLevel="error"

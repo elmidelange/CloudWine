@@ -34,7 +34,7 @@ def main(config):
     df = dataset.get_df()
     # valid.plot_pca(x, df['variety_region'])
     results = valid.cluster_similarities(x, df)
-    logger.info('\n', results)
+    logger.info(results)
     if args['save_validation'] == True:
         logger.info('Saving Validation')
         config['output'] = results['similarity']

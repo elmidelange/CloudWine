@@ -9,3 +9,4 @@ streamlit==0.60.0
 plotly==4.8.1
 nltk==3.5
 sentence-transformers==0.2.6.1
+google-cloud-storage==1.29.0

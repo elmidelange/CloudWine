@@ -55,7 +55,7 @@ class Dataset:
     def save(self, path):
         path = path.replace('raw', 'processed')
         columns = ['title', 'description', 'points', 'price', 'variety', 'region_1', 'variety_region']
-        print('Saving to ' + path)
+        logger.info('Saving to ' + path)
         self.df[columns].to_csv(path, index=False)
 
     # Read in dataframe
@@ -151,9 +151,6 @@ class Validation:
         df_embed['pca-two'] = pca_result[:,1]
 
         if top==True:
-            # df_embed.loc[~df_embed['y'].isin(self.top_labels[:self.top_n]), 'y'] = 'other'
-            # df_embed['size'] = 0
-            # df_embed.loc[df_embed['y'] != 'other','size'] = 10
             df_embed = df_embed[df_embed['y'].isin(self.top_labels[:self.top_n])]
 
         plt.figure(figsize=(14,8))
