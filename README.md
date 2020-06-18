@@ -2,7 +2,7 @@
 A scalable wine recommendation application.
 
 ## Motivation for this project:
-With COVID-19 disrupting the wine industry and consumers moving to online sales, it can be an overwhelming experience to select a wine that matches your taste. This project addresses this headache by recommending wine to users based off similarities in taste notes. 
+With COVID-19 disrupting the wine industry and consumers moving to online sales, it can be an overwhelming experience to select a wine that matches your taste. This project addresses this headache by recommending wine to users based off similarities in taste notes.
 
 ## Setup
 Clone repository
@@ -11,9 +11,8 @@ git clone https://github.com/elmidelange/CloudWine
 cd ./CloudWine
 ```
 
-## Requisites
-- List all packages and software needed to build the environment
-- This could include cloud command line tools (i.e. gsutil), package managers (i.e. conda), etc.
+## Recommended Requisites
+- conda
 
 
 #### Dependencies
@@ -23,6 +22,8 @@ cd ./CloudWine
 #### Installation
 To install the package above, please run:
 ```shell
+conda create --name cloudwine python=3.8
+conda activate cloudwine
 pip install -r requirements
 ```
 
@@ -39,11 +40,8 @@ pip install -r requirements
 # Step 2
 ``` -->
 
-<!-- ## Configs
-- We recommond using either .yaml or .txt for your config files, not .json
-- **DO NOT STORE CREDENTIALS IN THE CONFIG DIRECTORY!!**
-- If credentials are needed, use environment variables or HashiCorp's [Vault](https://www.vaultproject.io/) -->
-
+## Configs
+The config.yaml file contains the final mode parameters for input into the training script. See 'Train Model' section below.
 
 <!-- ## Test
 - Include instructions for how to run all tests after the software is installed
@@ -81,6 +79,7 @@ streamlit run app.py
 - Docker build
 ```
 docker build -t cloudwine-streamlit:v1 -f Dockerfile.app .
+docker run -p 80:80 cloudwine-streamlit:v1
 ```
 
 ## Deploy to Google Kubernetes Engine (GKE)
@@ -113,7 +112,7 @@ docker push gcr.io/${PROJECT_ID}/cloudwine-streamlit:v1
 
 Create GKE Cluster
 ```
-gcloud container clusters create cloudwine-cluster
+gcloud container clusters create cloudwine-cluster --machine-type=n1-highmem-2
 gcloud compute instances list
 ```
 
@@ -145,11 +144,6 @@ gcloud container clusters delete cloudwine-cluster
 
 
 ## Analysis
-- Include some form of EDA (exploratory data analysis)
-- And/or include benchmarking of the model and results
-```
-# Example
+Run the streamlit app and see the 'Model Deep Dive' page for data exploration and experiment results.
 
-# Step 1
-# Step 2
-```
+![](cloudwine/resources/model_evaluation.png?raw=true)
