@@ -116,7 +116,6 @@ def show_metrics_graph():
             textposition='auto',)
     ])
     # Change the bar mode
-    fig.update_layout(barmode='group', xaxis_title='Embedding Type', yaxis_title="Intra-cluster Cosine Similarity",
-                        title="Embedding Model Evaluation Metric")
+    fig.update_layout(barmode='group', xaxis_title='Embedding Type', yaxis_title="Intra-cluster Cosine Similarity")
     fig.update_yaxes(range=[0, 1])
     st.plotly_chart(fig, use_container_width=True)

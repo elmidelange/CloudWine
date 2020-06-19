@@ -11,12 +11,9 @@ git clone https://github.com/elmidelange/CloudWine
 cd ./CloudWine
 ```
 
-## Recommended Requisites
-- conda
-
-
+## Requisites
 #### Dependencies
-
+- [Anaconda] (https://docs.anaconda.com/anaconda/install/)
 - [Streamlit](streamlit.io)
 
 #### Installation
