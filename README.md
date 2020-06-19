@@ -69,11 +69,10 @@ docker build -t cloudwine-train:v1 -f Dockerfile.train .
 ```
 
 ## Run Streamlit App
-- Local build
 ```
 streamlit run app.py
 ```
-- Docker build
+Docker build
 ```
 docker build -t cloudwine-streamlit:v1 -f Dockerfile.app .
 docker run -p 80:80 cloudwine-streamlit:v1
