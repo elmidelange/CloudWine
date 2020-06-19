@@ -5,7 +5,7 @@ WORKDIR /root
 # Copies the trainer code
 RUN mkdir /root/data
 COPY data /root/data
-COPY train_model.py /root/train_model.py
+COPY train/train.py /train/train.py
 COPY utils.py /root/utils.py
 COPY models.py /root/models.py
 COPY config.yaml /root/config.yaml
@@ -39,4 +39,4 @@ ENV PATH $PATH:/root/tools/google-cloud-sdk/bin
 RUN echo '[GoogleCompute]\nservice_account = default' > /etc/boto.cfg
 
 # Sets up the entry point to invoke the trainer.
-ENTRYPOINT ["python", "train_model.py"]
+ENTRYPOINT ["python", "train/train_model.py", "-y", "/root/config.yaml"]
