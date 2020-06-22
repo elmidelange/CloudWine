@@ -58,22 +58,20 @@ The config.yaml file contains the final mode parameters for input into the train
 ``` -->
 
 ## Train Model
-- Local build
 ```
 python3 train/train.py -f './train/config.yaml'
 ```
-- Docker build
+Optional: Docker build
 ```
 cd train
 docker build -t cloudwine-train:v1 -f Dockerfile.train .
 ```
 
 ## Run Streamlit App
-- Local build
 ```
 streamlit run app.py
 ```
-- Docker build
+Optional: Docker build
 ```
 docker build -t cloudwine-streamlit:v1 -f Dockerfile.app .
 docker run -p 80:80 cloudwine-streamlit:v1
