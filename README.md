@@ -23,7 +23,7 @@ To install the package above, please run:
 ```shell
 conda create --name cloudwine python=3.8
 conda activate cloudwine
-pip install -r requirements
+pip install -r requirements.txt
 ```
 
 <!-- ## Build Environment
@@ -38,9 +38,6 @@ pip install -r requirements
 # Step 1
 # Step 2
 ``` -->
-
-## Configs
-The config.yaml file contains the final mode parameters for input into the training script. See 'Train Model' section below.
 
 <!-- ## Test
 - Include instructions for how to run all tests after the software is installed
@@ -59,15 +56,6 @@ The config.yaml file contains the final mode parameters for input into the train
 # Step 2
 ``` -->
 
-## Train Model
-```
-python3 train/train.py -f './train/config.yaml'
-```
-Optional: Docker build
-```
-cd train
-docker build -t cloudwine-train:v1 -f Dockerfile.train .
-```
 
 ## Run Streamlit App
 ```
@@ -77,6 +65,17 @@ Optional: Docker build
 ```
 docker build -t cloudwine-streamlit:v1 -f Dockerfile.app .
 docker run -p 80:80 cloudwine-streamlit:v1
+```
+
+## Train Model
+The config.yaml file contains the final mode parameters for input into the training script. 
+```
+python3 train/train.py -f './train/config.yaml'
+```
+Optional: Docker build
+```
+cd train
+docker build -t cloudwine-train:v1 -f Dockerfile.train .
 ```
 
 ## Deploy to Google Kubernetes Engine (GKE)
