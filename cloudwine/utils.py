@@ -44,7 +44,7 @@ class DataModule:
 
 
 # Download data from GCP bucket
-@st.cache
+@st.cache(suppress_st_warning=True)
 def download_data():
     logger.info('\n\n DOWNLOADING DATA \n\n')
     bucket_name = 'cloudwine'
@@ -53,7 +53,7 @@ def download_data():
 
     app_path = os.path.abspath(os.getcwd())
 
-    # Download reviews csv
+    loader = Loader()
     blobs = bucket.list_blobs(prefix='data/data.csv')  # Get list of files
     for blob in blobs:
         filename = blob.name.split('/')[1]
@@ -61,6 +61,7 @@ def download_data():
             logger.warning('Downloading file ' + filename)
             print(blob.download_to_filename(app_path + '/cloudwine/data/' + filename))  # Download
 
+    loader.update_loader(0.33)
     # Download trained embeddings
     blobs = bucket.list_blobs(prefix='model/')  # Get list of files
     for blob in blobs:
@@ -69,6 +70,8 @@ def download_data():
             logger.warning('Downloading file ' + filename)
             blob.download_to_filename(app_path + '/cloudwine/models/' + filename)  # Download
 
+    loader.update_loader(0.66)
+
     # Download trained embeddings
     blobs = bucket.list_blobs(prefix='resources/')  # Get list of files
     for blob in blobs:
@@ -76,7 +79,21 @@ def download_data():
         if filename and not os.path.isfile(app_path + '/cloudwine/resources/' + filename):
             logger.warning('Downloading file ' + filename)
             blob.download_to_filename(app_path + '/cloudwine/resources/' + filename)  # Download
+    loader.update_loader(0.99)
+    loader.remove_loader()
 
+
+class Loader:
+    def __init__(self, title=None):
+        if title:
+            st.write(title)
+        self.prog_bar = st.progress(0)
+
+    def update_loader(self, progress):
+        self.prog_bar.progress(progress)
+
+    def remove_loader(self):
+        self.prog_bar.empty()
 
 # Initialise data class
 def init_data():
