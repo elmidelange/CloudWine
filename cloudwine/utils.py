@@ -21,7 +21,7 @@ formatter = logging.Formatter(
         '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
-logger.setLevel(logging.WARNING)
+logger.setLevel(logging.INFO)
 
 
 @dataclass
@@ -59,7 +59,7 @@ def download_data():
         filename = blob.name.split('/')[1]
         if filename and not os.path.isfile(app_path + '/cloudwine/data/' + filename):
             logger.warning('Downloading file ' + filename)
-            blob.download_to_filename(app_path + '/cloudwine/data/' + filename)  # Download
+            print(blob.download_to_filename(app_path + '/cloudwine/data/' + filename))  # Download
 
     # Download trained embeddings
     blobs = bucket.list_blobs(prefix='model/')  # Get list of files

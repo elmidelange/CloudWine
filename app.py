@@ -8,7 +8,7 @@ from cloudwine.utils import show_metrics_graph, download_data, update_embedding,
 # Start execution
 def main():
     # Download data from GCP bucket
-    # download_data()
+    download_data()
     # Initialise the data module for the app
     data_module = init_data()
     # Determine app mode to run
