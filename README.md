@@ -72,7 +72,7 @@ The config.yaml file contains the final mode parameters for input into the train
 ```
 cd train
 pip install -r requirements.txt
-python3 train/train.py -f './train/config.yaml'
+python3 train.py -f './config.yaml'
 ```
 Optional: Docker build
 ```
