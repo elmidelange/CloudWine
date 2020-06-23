@@ -1,8 +1,10 @@
 # 🌤 Cloud Wine 🍷
 A scalable wine recommendation application.
-![](streamlit-demo.gif)
+
 ## Motivation for this project:
 With COVID-19 disrupting the wine industry and consumers moving to online sales, it can be an overwhelming experience to select a wine that matches your taste. This project addresses this headache by recommending wine to users based off similarities in taste notes.
+
+![](streamlit-demo.gif)
 
 ## Setup
 Clone repository
