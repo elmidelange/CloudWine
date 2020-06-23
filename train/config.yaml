@@ -5,7 +5,7 @@ args:
   model_dir: ./models/
   remove_punctuation: true
   remove_stopwords: true
-  save_model: true
-  save_validation: true
+  save_model: false
+  save_validation: false
   validation_dir: ./runs/
-model: bert
+model: tfidf
