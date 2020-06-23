@@ -23,7 +23,7 @@ To install the package above, please run:
 ```shell
 conda create --name cloudwine python=3.8
 conda activate cloudwine
-pip install -r requirements
+pip install -r requirements.txt
 ```
 
 <!-- ## Build Environment
