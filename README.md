@@ -59,15 +59,6 @@ The config.yaml file contains the final mode parameters for input into the train
 # Step 2
 ``` -->
 
-## Train Model
-```
-python3 train/train.py -f './train/config.yaml'
-```
-Optional: Docker build
-```
-cd train
-docker build -t cloudwine-train:v1 -f Dockerfile.train .
-```
 
 ## Run Streamlit App
 ```
@@ -77,6 +68,16 @@ Optional: Docker build
 ```
 docker build -t cloudwine-streamlit:v1 -f Dockerfile.app .
 docker run -p 80:80 cloudwine-streamlit:v1
+```
+
+## Train Model
+```
+python3 train/train.py -f './train/config.yaml'
+```
+Optional: Docker build
+```
+cd train
+docker build -t cloudwine-train:v1 -f Dockerfile.train .
 ```
 
 ## Deploy to Google Kubernetes Engine (GKE)
