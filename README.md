@@ -70,11 +70,12 @@ docker run -p 80:80 cloudwine-streamlit:v1
 ## Train Model
 The config.yaml file contains the final mode parameters for input into the training script. 
 ```
-python3 train/train.py -f './train/config.yaml'
+cd train
+pip install -r requirements.txt
+python3 train.py -y './config.yaml'
 ```
 Optional: Docker build
 ```
-cd train
 docker build -t cloudwine-train:v1 -f Dockerfile.train .
 ```
 
