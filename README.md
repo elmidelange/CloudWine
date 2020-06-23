@@ -39,9 +39,6 @@ pip install -r requirements.txt
 # Step 2
 ``` -->
 
-## Configs
-The config.yaml file contains the final mode parameters for input into the training script. See 'Train Model' section below.
-
 <!-- ## Test
 - Include instructions for how to run all tests after the software is installed
 ```
@@ -71,6 +68,7 @@ docker run -p 80:80 cloudwine-streamlit:v1
 ```
 
 ## Train Model
+The config.yaml file contains the final mode parameters for input into the training script. 
 ```
 python3 train/train.py -f './train/config.yaml'
 ```
