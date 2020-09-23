@@ -1,13 +1,14 @@
 import os
+import glob
 import pandas as pd
 import numpy as np
 import pickle
 import streamlit as st
 import plotly.graph_objects as go
 import logging
+import gdown
 
 from sklearn.metrics.pairwise import cosine_similarity
-from google.cloud import storage
 from dataclasses import dataclass
 
 data_file = 'cloudwine/data/data.csv'
@@ -47,41 +48,22 @@ class DataModule:
 @st.cache(suppress_st_warning=True)
 def download_data():
     logger.info('\n\n DOWNLOADING DATA \n\n')
-    bucket_name = 'cloudwine'
-    storage_client = storage.Client()
-    bucket = storage_client.bucket(bucket_name)
-
     app_path = os.path.abspath(os.getcwd())
-
-    loader = Loader()
-    blobs = bucket.list_blobs(prefix='data/data.csv')  # Get list of files
-    for blob in blobs:
-        filename = blob.name.split('/')[1]
-        if filename and not os.path.isfile(app_path + '/cloudwine/data/' + filename):
-            logger.warning('Downloading file ' + filename)
-            print(blob.download_to_filename(app_path + '/cloudwine/data/' + filename))  # Download
-
-    loader.update_loader(0.33)
-    # Download trained embeddings
-    blobs = bucket.list_blobs(prefix='model/')  # Get list of files
-    for blob in blobs:
-        filename = blob.name.split('/')[1]
-        if filename and not os.path.isfile(app_path + '/cloudwine/models/' + filename):
-            logger.warning('Downloading file ' + filename)
-            blob.download_to_filename(app_path + '/cloudwine/models/' + filename)  # Download
-
-    loader.update_loader(0.66)
-
-    # Download trained embeddings
-    blobs = bucket.list_blobs(prefix='resources/')  # Get list of files
-    for blob in blobs:
-        filename = blob.name.split('/')[1]
-        if filename and not os.path.isfile(app_path + '/cloudwine/resources/' + filename):
-            logger.warning('Downloading file ' + filename)
-            blob.download_to_filename(app_path + '/cloudwine/resources/' + filename)  # Download
-    loader.update_loader(0.99)
-    loader.remove_loader()
-
+    files = glob.glob1(app_path + '/cloudwine/models/',"*.pkl")
+    pklCounter = len(files)
+    print(f'Found {pklCounter} models')
+    if pklCounter != 6:
+        print('Removing items')
+        gd_links = {'tfidf_vectors.pkl':'https://drive.google.com/uc?export=download&id=1lsgOd_onTor8_5MW4y-Za96B5wCPoVO8',
+            'tfidf_model.pkl': 'https://drive.google.com/uc?export=download&id=1BduFhJHYS0YOmgUaXOz2t7F9u4kuxW4w',
+            'doc2vec_vectors.pkl': 'https://drive.google.com/uc?export=download&id=1hW75zEJFCza55TiSVk54bUhXMnddrCRJ',
+            'doc2vec_model.pkl': 'https://drive.google.com/uc?export=download&id=15wd7tgNvpTKbIdNowle3gLLedcInOUM6',
+            'bert_vectors.pkl': 'https://drive.google.com/uc?export=download&id=1edPl0phsC7N2PfWpUb2VLS6NitjIBFfS',
+            'bert_model.pkl': 'https://drive.google.com/uc?export=download&id=1osi-h2TgCVbKZWfHmdnI5mKQO6GWi0Tb'
+        }
+        for name, url in gd_links.items():
+            print(name, url)
+            gdown.download(url, f'{app_path}/cloudwine/models/{name}', quiet=False)
 
 class Loader:
     def __init__(self, title=None):
