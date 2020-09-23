@@ -1,7 +1,7 @@
 # Dockerfile for building streamline app
 
 # pull miniconda image
-FROM continuumio/miniconda3
+FROM python:3.7
 
 # copy local files into container
 COPY app.py /tmp/
@@ -13,17 +13,17 @@ COPY .streamlit /tmp/.streamlit
 COPY build /tmp/build
 
 # install python 3.8.3
-RUN conda install python=3.8.3
+# RUN conda install python=3.8.3
 # RUN conda install faiss-cpu=1.5.1 -c pytorch -y
 
-ENV PORT 8080
-#ENV GOOGLE_APPLICATION_CREDENTIALS=/tmp/build/storage-read-only-service-account.json
+# ENV PORT 8080
+# ENV GOOGLE_APPLICATION_CREDENTIALS=/tmp/build/storage-read-only-service-account.json
 
 # change directory
 WORKDIR /tmp
 
 # install dependencies
-RUN apt-get update && apt-get install -y vim g++
+RUN apt-get update && apt-get install -y g++
 RUN pip install -r requirements.txt
 
 # run commands
