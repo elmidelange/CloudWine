@@ -9,7 +9,6 @@ import logging
 import gdown
 
 from sklearn.metrics.pairwise import cosine_similarity
-from google.cloud import storage
 from dataclasses import dataclass
 
 data_file = 'cloudwine/data/data.csv'
@@ -23,7 +22,7 @@ formatter = logging.Formatter(
         '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.ERROR)
 
 
 @dataclass
