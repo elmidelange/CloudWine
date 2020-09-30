@@ -10,7 +10,7 @@ COPY cloudwine /tmp/cloudwine
 #COPY data /tmp/data
 # .streamlit for something to do with making enableCORS=False
 COPY .streamlit /tmp/.streamlit
-COPY build /tmp/build
+# COPY build /tmp/build
 
 # install python 3.8.3
 # RUN conda install python=3.8.3
